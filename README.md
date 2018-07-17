@@ -1,4 +1,6 @@
-0) Generate RSA public/private files (if apply):
+Requirements: **Virtual Box**, **Vagrant** v2 and **Ansible** v2.
+
+0) Generate RSA public/private files (if needed):
 ```
 bash# ssh-keygen
 ```

@@ -2,6 +2,11 @@
   selinux:
     state: disabled
 
+- name: "Configure /etc/hosts file"
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+
 - name: "Install wget package"
   yum:
     name: wget.x86_64
