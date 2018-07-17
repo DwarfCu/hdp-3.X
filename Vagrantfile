@@ -21,6 +21,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     hdp.vm.hostname = "vlihdp01.virtualjr.com"
     hdp.vm.network "private_network", ip: "172.10.0.3"
     hdp.vm.network "forwarded_port", guest: 8080, host: 8080
+    hdp.vm.network "forwarded_port", guest: 8088, host: 8088
+    hdp.vm.network "forwarded_port", guest: 50070, host: 50070
     hdp.vm.provider "virtualbox" do |vb|
       vb.name = "vlihdp01.virtualjr.com"
       vb.memory = "6148"
