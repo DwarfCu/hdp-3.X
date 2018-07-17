@@ -1,0 +1,45 @@
+- name: "Disable SElinux"
+  selinux:
+    state: disabled
+
+- name: "Install wget package"
+  yum:
+    name: wget.x86_64
+    state: latest
+
+- name: "Install vim package"
+  yum:
+    name: vim-common.x86_64
+    state: latest
+
+- name: "Add ambari repo"
+  get_url:
+    url: http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.0.0/ambari.repo
+    dest: /etc/yum.repos.d/
+    mode: 0644
+
+- name: "Install AMBARI-SERVER package"
+  yum:
+    name: ambari-server.x86_64
+    state: latest
+
+- name: "Reboot if required"
+  shell: sleep 2 && shutdown -r now 'Reboot required' removes=/var/run/reboot-required
+  become: true
+  async: 1
+  poll: 0
+  ignore_errors: true
+
+- name: "Wait for reboot"
+  local_action: wait_for host=127.0.0.1 port=2222 delay=10 state=started
+  become: false
+
+#  ambari-server setup
+#  ---ambari
+#  ---1
+#  ---y
+#  ---y
+#  ---n
+#  Ambari Server 'setup' completed successfully.
+#
+#  ambari-server start

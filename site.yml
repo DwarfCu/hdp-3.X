@@ -1,0 +1,4 @@
+- hosts: ambari_server_nodes
+  roles:
+    - ambari-server
+  become: true
