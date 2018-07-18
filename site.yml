@@ -1,4 +1,5 @@
 - hosts: ambari_server_nodes
   roles:
+    - common
     - ambari-server
   become: true
