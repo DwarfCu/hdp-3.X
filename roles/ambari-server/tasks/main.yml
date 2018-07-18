@@ -7,6 +7,23 @@
     src: hosts.j2
     dest: /etc/hosts
 
+# Install pexpect requirement for 'expect' Ansible module
+- name: "Install EPEL repo"
+  yum:
+    name: epel-release
+    state: latest
+
+- name: "Install python-pip"
+  yum:
+    name: python-pip
+    state: latest
+
+- name: "Upgrade python-pip"
+  command: pip install --upgrade pip
+
+- name: "Install pexpect"
+  command: pip install pexpect==3.3
+
 - name: "Install wget package"
   yum:
     name: wget.x86_64
@@ -39,13 +56,19 @@
   local_action: wait_for host=127.0.0.1 port=2222 delay=10 state=started
   become: false
 
-# sudo ambari-server setup
-# OK to continue [y/n] (y)? y
-# Customize user account for ambari-server daemon [y/n] (n)? y
-# Enter user account for ambari-server daemon (root): ambari
-# Enter choice (1): 1
-# Do you accept the Oracle Binary Code License Agreement [y/n] (y)? y
-# Enable Ambari Server to download and install GPL Licensed LZO packages [y/n] (n)? y
-# Enter advanced database configuration [y/n] (n)? n
-#
-# sudo ambari-server start
+- name: "Setup AMBARI-SERVER"
+  expect:
+    command: /usr/sbin/ambari-server setup
+    responses:
+      'OK to continue \[y\/n\] \(y\)\? ': "y"
+      'Customize user account for ambari-server daemon \[y\/n\] \(n\)\? ': 'y'
+      'Enter user account for ambari-server daemon \(root\):': 'ambari'
+      'Enter choice \(1\):': '1'
+      'Do you accept the Oracle Binary Code License Agreement \[y\/n\] \(y\)\? ': 'y'
+      'Enable Ambari Server to download and install GPL Licensed LZO packages \[y\/n\] \(n\)\? ': 'y'
+      'Enter advanced database configuration \[y\/n\] \(n\)\? ': 'n'
+    echo: yes
+  become: true
+
+- name: "Start AMBARI-SERVER"
+  command: /usr/sbin/ambari-server start
