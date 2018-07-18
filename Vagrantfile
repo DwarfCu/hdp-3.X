@@ -26,7 +26,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     hdp.vm.network "forwarded_port", guest: 8088, host: 8088, guest_ip: "172.10.0.3"
     # Hadoop NameNode UI
     hdp.vm.network "forwarded_port", guest: 50070, host: 50070, guest_ip: "172.10.0.3"
-    
     hdp.vm.provider "virtualbox" do |vb|
       vb.name = "vlihdp01.virtualjr.com"
       vb.memory = "6148"
