@@ -12,4 +12,4 @@ bash# vagrant up
 ```
 bash# ansible-playbook -i production site.yml
 ```
-3) [Ambari](http://127.0.0.1:8080/)
+3) [Ambari](http://127.0.0.1:8080/), create/setup your cluster and enjoy it!
