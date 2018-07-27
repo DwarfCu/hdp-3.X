@@ -28,15 +28,14 @@
 - name: "Install pexpect"
   command: pip install pexpect==3.3
 
-- name: "Install wget package"
+- name: "Install other packages"
   yum:
-    name: wget.x86_64
-    state: latest
-
-- name: "Install vim package"
-  yum:
-    name: vim-common.x86_64
-    state: latest
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - wget.x86_64
+    - vim-common.x86_64
+    - vim-enhanced.x86_64
 
 - name: "Reboot if required"
   shell: sleep 2 && shutdown -r now 'Reboot required' removes=/var/run/reboot-required

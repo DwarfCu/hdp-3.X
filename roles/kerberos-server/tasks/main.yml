@@ -1,0 +1,66 @@
+- name: "Install Kerberos server packages"
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - krb5-server
+    - krb5-libs
+    - krb5-workstation
+
+- name: "Copy file: krb5.conf"
+  copy:
+    src: krb5.conf
+    dest: /etc/
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Copy file: kdc.conf"
+  copy:
+    src: kdc.conf
+    dest: /var/kerberos/krb5kdc/
+    owner: root
+    group: root
+    mode: 0600
+
+- name: "Create KDC database"
+  expect:
+    command: /usr/sbin/kdb5_util create -s
+    responses:
+      'Enter KDC database master key: ': '1234!'
+      'Re-enter KDC database master key to verify: ': '1234!'
+    echo: yes
+  become: true
+
+- name: "Copy file: kadm5.acl"
+  copy:
+    src: kadm5.acl
+    dest: /var/kerberos/krb5kdc/
+    owner: root
+    group: root
+    mode: 0600
+
+- name: "Enable and restart kadmin service"
+  systemd:
+    name: kadmin.service
+    daemon_reload: yes
+    enabled: yes
+    masked: no
+    state: restarted
+
+- name: "Add principal quick/admin"
+  expect:
+    command: /usr/sbin/kadmin.local -q "addprinc quick/admin"
+    responses:
+      'Enter password for principal "quick/admin@VIRTUALJR.COM": ': '1234'
+      'Re-enter password for principal "quick/admin@VIRTUALJR.COM": ': '1234'
+    echo: yes
+  become: true
+
+- name: "Enable and restart krb5kdc service"
+  systemd:
+    name: krb5kdc.service
+    daemon_reload: yes
+    enabled: yes
+    masked: no
+    state: restarted

@@ -1,0 +1,15 @@
+- name: "Install Kerberos client packages"
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - krb5-libs
+    - krb5-workstation
+
+- name: "Copy krb5.conf"
+  copy:
+    src: krb5.conf
+    dest: /etc/
+    owner: root
+    group: root
+    mode: 0644

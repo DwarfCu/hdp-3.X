@@ -31,7 +31,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.memory = "6148"
       vb.cpus = 4
     end
+  end
 
+  config.vm.define "krb" do |krb|
+    krb.vm.hostname = "vlikrb01.virtualjr.com"
+    krb.vm.network "private_network", ip: "172.10.0.2"
+    krb.vm.provider "virtualbox" do |vb|
+      vb.name = "vlikrb01.virtualjr.com"
+      vb.memory = "1024"
+      vb.cpus = 1
+    end
   end
 
 end
