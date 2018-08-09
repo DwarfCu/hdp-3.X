@@ -32,6 +32,10 @@
   become: true
   when: service_ambari_server_status.rc != 0
 
+- name: "Check if ambari-server is running"
+  shell: /usr/bin/ps -ef | /usr/bin/grep -i ambari-server | /usr/bin/grep -v grep
+  register: service_ambari_server_status2
+
 - name: "Start AMBARI-SERVER"
   command: /usr/sbin/ambari-server start
-  when: service_ambari_server_status.rc != 0
+  when: service_ambari_server_status2.rc != 0
