@@ -1,13 +1,19 @@
+- name: "Check if ambari-server is running"
+  shell: /usr/bin/ps -ef | /usr/bin/grep -i ambari-server | /usr/bin/grep -v grep
+  register: service_ambari_server_status
+
 - name: "Add ambari repo"
   get_url:
     url: http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.7.0.0/ambari.repo
     dest: /etc/yum.repos.d/
     mode: 0644
+  when: service_ambari_server_status.rc != 0
 
 - name: "Install AMBARI-SERVER package"
   yum:
     name: ambari-server.x86_64
     state: latest
+  when: service_ambari_server_status.rc != 0
 
 - name: "Setup AMBARI-SERVER"
   expect:
@@ -20,8 +26,12 @@
       'Do you accept the Oracle Binary Code License Agreement \[y\/n\] \(y\)\? ': 'y'
       'Enable Ambari Server to download and install GPL Licensed LZO packages \[y\/n\] \(n\)\? ': 'y'
       'Enter advanced database configuration \[y\/n\] \(n\)\? ': 'n'
+      'Change this setting \[y\/n\] \(n\)\? ': 'n'
+      'Do you want to change Oracle JDK \[y\/n\] \(n\)\? ': 'n'
     echo: yes
   become: true
+  when: service_ambari_server_status.rc != 0
 
 - name: "Start AMBARI-SERVER"
   command: /usr/sbin/ambari-server start
+  when: service_ambari_server_status.rc != 0
