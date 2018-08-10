@@ -1,3 +1,8 @@
+- name: "Check if ambari-server is running"
+  shell: /usr/bin/ps -ef | /usr/bin/grep -i kadmin | /usr/bin/grep -v grep
+  register: service_kadmin_status
+  ignore_errors: true
+
 - name: "Install Kerberos server packages"
   yum:
     name: "{{ packages }}"
@@ -6,6 +11,7 @@
     - krb5-server
     - krb5-libs
     - krb5-workstation
+  when: service_kadmin_status.rc != 0
 
 - name: "Copy file: krb5.conf"
   copy:
@@ -14,6 +20,7 @@
     owner: root
     group: root
     mode: 0644
+  when: service_kadmin_status.rc != 0
 
 - name: "Copy file: kdc.conf"
   copy:
@@ -22,6 +29,7 @@
     owner: root
     group: root
     mode: 0600
+  when: service_kadmin_status.rc != 0
 
 - name: "Create KDC database"
   expect:
@@ -31,6 +39,7 @@
       'Re-enter KDC database master key to verify: ': '1234!'
     echo: yes
   become: true
+  when: service_kadmin_status.rc != 0
 
 - name: "Copy file: kadm5.acl"
   copy:
@@ -39,6 +48,7 @@
     owner: root
     group: root
     mode: 0600
+  when: service_kadmin_status.rc != 0
 
 - name: "Enable and restart kadmin service"
   systemd:
@@ -47,6 +57,7 @@
     enabled: yes
     masked: no
     state: restarted
+  when: service_kadmin_status.rc != 0
 
 - name: "Add principal quick/admin"
   expect:
@@ -56,6 +67,7 @@
       'Re-enter password for principal "quick/admin@VIRTUALJR.COM": ': '1234'
     echo: yes
   become: true
+  when: service_kadmin_status.rc != 0
 
 - name: "Enable and restart krb5kdc service"
   systemd:
@@ -64,3 +76,4 @@
     enabled: yes
     masked: no
     state: restarted
+  when: service_kadmin_status.rc != 0
