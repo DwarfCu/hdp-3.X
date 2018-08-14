@@ -1,5 +1,12 @@
+- hosts: kerberos_server_nodes
+  roles:
+    - common
+    - kerberos-server
+  become: true
+
 - hosts: ambari_server_nodes
   roles:
     - common
+    - kerberos-client
     - ambari-server
   become: true

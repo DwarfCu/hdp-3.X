@@ -1,6 +1,8 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
-{% for item in groups['all'] %}
-{{ lan_ip }} {{ fqdn }} {{ host }}
-{% endfor %}
+# Kerberos KDC
+172.10.0.2 vlikrb01.virtualjr.com vlikrb01
+
+# Hortonworks Ambari-Server
+172.10.0.3 vlihdp01.virtualjr.com vlihdp01

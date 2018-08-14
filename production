@@ -1,7 +1,12 @@
 vlihdp01 ansible_host=127.0.0.1 ansible_ssh_port=2222 ansible_user=vagrant
+vlikrb01 ansible_host=127.0.0.1 ansible_ssh_port=2200 ansible_user=vagrant
 
 [ambari_server_nodes]
 vlihdp01
 
+[kerberos_server_nodes]
+vlikrb01
+
 [all]
 vlihdp01
+vlikrb01
