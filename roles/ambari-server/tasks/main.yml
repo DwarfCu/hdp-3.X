@@ -41,3 +41,11 @@
 - name: "Start AMBARI-SERVER"
   command: /usr/sbin/ambari-server start
   when: service_ambari_server_status2.rc != 0
+
+# +INFO: https://docs.hortonworks.com/HDPDocuments/Ambari-2.6.2.2/bk_ambari-security/content/how_to_configure_ambari_server_for_non-root.html
+#- name: "Configure Ambari Server for Non-Root User (ambari)"
+# Add /etc/sudoers
+# Ambari Commands
+#ambari ALL=(ALL) NOPASSWD:SETENV: /bin/mkdir -p /etc/security/keytabs, /bin/chmod * /etc/security/keytabs/*.keytab, /bin/chown * /etc/security/keytabs/*.keytab, /bin/chgrp * /etc/security/keytabs/*.keytab, /bin/rm -f /etc/security/keytabs/*.keytab, /bin/cp -p -f /var/lib/ambari-server/data/tmp/* /etc/security/keytabs/*.keytab
+
+# usermod -a -G hadoop ambari
